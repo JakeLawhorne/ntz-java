@@ -1,5 +1,7 @@
 package rocks.zipcode;
 
+import java.util.Scanner;
+
 /**
  * ntz main command.
  */
@@ -12,10 +14,12 @@ public final class Notez {
     }
     /**
      * Says hello to the world.
-     * 
+     *
      * @param args The arguments of the program.
      */
     public static void main(String argv[]) {
+        Scanner scanner = new Scanner(System.in);
+
         boolean _debug = true;
         // for help in handling the command line flags and data!
         if (_debug) {
@@ -30,9 +34,20 @@ public final class Notez {
 
         ntzEngine.loadDatabase();
 
+        String start = scanner.nextLine();
+
+        if(start.equals("ntz")){
+            while(true){
+
+
+            }
+
+        }
+
+
         /*
          * You will spend a lot of time right here.
-         * 
+         *
          * instead of loadDemoEntries, you will implement a series
          * of method calls that manipulate the Notez engine.
          * See the first one:
