@@ -45,34 +45,6 @@ public final class Notez {
 
         ntzEngine.loadDatabase();
 
-        String start = scanner.nextLine();
-
-        if(start.equals("ntz")){
-            while(true){
-                ntzEngine.printResults();
-
-                System.out.println("[r]emember\n" +
-                    "[c]reate new category\n" +
-                    "[f]orget a note\n" +
-                    "[e]dit a note");
-
-                String userChoice = scanner.nextLine();
-
-                switch (userChoice){
-                    case "r": ntzEngine.addNote();
-                    break;
-                    case "c": ntzEngine.createAppendCategory();
-                    break;
-                    case "f": ntzEngine.removeNote();
-                    break;
-                    case "e": ntzEngine.editNote();
-                    break;
-                    }
-                    ntzEngine.saveDatabase();
-                }
-            }
-
-
 
         /*
          * You will spend a lot of time right here.
@@ -87,18 +59,32 @@ public final class Notez {
             //just print the contents of the filemap.
             ntzEngine.printResults();
         } else {
-            if (argv[0].equals("-r")) {
+            if(argv[0].equals("-r")) {
                 ntzEngine.addToCategory("General", argv);
-            } // this should give you an idea about how to TEST the Notez engine
+            }else if(argv[0].equals("-c")){
+                ntzEngine.addToCategory(argv[1], argv);
+            }else if(argv[0].equals("-f")){
+                ntzEngine.forgetNote(argv[1], Integer.parseInt(argv[2]) - 1);
+            }else if(argv[0].equals("-e")){
+                ntzEngine.editNote(argv[1], Integer.parseInt(argv[2]) - 1, argv[3]);
+            }
+
+            // this should give you an idea about how to TEST the Notez engine
               // without having to spend lots of time messing with command line arguments.
         }
+        ntzEngine.saveDatabase();
         /*
          * what other method calls do you need here to implement the other commands??
          */
 
     }
 
-    private void addToCategory(String string, String[] argv) {
+    private void addToCategory(String category, String[] argv) {
+        if(filemap.containsKey(category)){
+            filemap.get(category).add(argv[argv.length-1]);
+        }else{
+            filemap.put(category, new NoteList(argv[argv.length-1]));
+        }
     }
 
     private void saveDatabase() {
@@ -122,19 +108,19 @@ public final class Notez {
     /*
      * Put all your additional methods that implement commands like forget here...
      */
-    public void addNote(){
-        System.out.println("Enter your general note:");
-        String note = scanner.nextLine();
-        filemap.put("General", new NoteList(note));
-    }
 
-    public void createAppendCategory(){
+    public void forgetNote(String category, int argv){
+        if(filemap.containsKey(category)){
+            filemap.get(category).remove(argv);
+            if(filemap.get(category).size() == 0){
+                filemap.remove(category);
+            }
+        }else System.out.println("That note doesnt exist");
     }
+    public void editNote(String category, int argv, String newMessage){
+        if(filemap.containsKey(category)){
+            filemap.get(category).set(argv, newMessage);
 
-    public void removeNote(){
-
+            }
+        }
     }
-    public void editNote(){
-
-    }
-}
